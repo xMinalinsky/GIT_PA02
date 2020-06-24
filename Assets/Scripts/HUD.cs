@@ -15,6 +15,12 @@ public class HUD : MonoBehaviour
         HUDManager = this;
     }
 
+    void Update()
+    {
+        UpdateLives();
+        UpdateScore();
+    }
+
     public void UpdateScore()
     {
         Txt_Score.text = "SCORE : " + GameManager.Score;

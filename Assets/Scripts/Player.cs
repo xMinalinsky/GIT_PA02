@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
 
     private float moveSpeed = 0.05f;
 
+    public GameObject explosion;
+    Vector3 spawnPos;
+    Quaternion playerRotation;
     void Start()
     {
         thisController = GetComponent<CharacterController>();
@@ -40,6 +43,13 @@ public class Player : MonoBehaviour
             }
 
             MoveDirection.y -= Gravity * Time.deltaTime;
+
+            Vector3 playerPos = transform.position;
+            Vector3 playerDirection = transform.forward;
+            playerRotation =transform.rotation;
+            float spawnDistance = 10;
+
+            spawnPos = playerPos + playerDirection * spawnDistance;
         }
 
         else
@@ -52,6 +62,20 @@ public class Player : MonoBehaviour
 
         thisController.Move(MoveDirection);
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, -1.5f, 1.5f), transform.position.y, transform.position.z);
+    }
+    public void Explosion()
+    {
+        GameObject temp = Instantiate(explosion, spawnPos, playerRotation)as GameObject;
+        Destroy(temp, 2);
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Collision")
+        {
+            GameManager.Lives--;
+            Destroy(other.gameObject);
+            Explosion();
+        }   
     }
 
 }
